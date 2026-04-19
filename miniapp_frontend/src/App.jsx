@@ -51,10 +51,14 @@ function AppLayout() {
   )
 }
 
+import { CatalogProvider } from './contexts/CatalogContext'
+
 export default function App() {
   return (
-    <BrowserRouter>
-      <AppLayout />
-    </BrowserRouter>
+    <CatalogProvider>
+      <BrowserRouter>
+        <AppLayout />
+      </BrowserRouter>
+    </CatalogProvider>
   )
 }

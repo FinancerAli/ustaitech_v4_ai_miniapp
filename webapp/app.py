@@ -23,6 +23,9 @@ app.include_router(catalog_router, prefix='/api')
 app.include_router(profile_router, prefix='/api')
 app.include_router(orders_router, prefix='/api')
 
+from webapp.routes.admin import router as admin_router
+app.include_router(admin_router, prefix='/api')
+
 
 @app.get("/health")
 async def health():

@@ -1,96 +1,157 @@
-// mock-db.js
-// LocalStorage based mock database for the Admin Panel
+// API-based mock-db for Admin Panel
 
-const DB_KEY = 'ustaitech_admin_db';
+const API_BASE = import.meta.env.VITE_API_BASE_URL?.replace(/\// + $ /, '') || '/api';
 
-const defaultData = {
-    products: [
-        { id: 1, name: 'ChatGPT Plus', subtitle: 'GPT-4 Turbo & DALL-E', price: 260000, category: 'text-ai', badge: 'HOT', status: 'active', icon: 'chat' },
-        { id: 2, name: 'Claude 3 Opus', subtitle: 'Anthropic Flagship', price: 285000, category: 'text-ai', badge: 'PRO', status: 'active', icon: 'auto_fix_high' },
-        { id: 3, name: 'Midjourney v6', subtitle: 'Professional Graphics', price: 145000, category: 'image-ai', badge: 'ART', status: 'active', icon: 'palette' }
-    ],
-    orders: [
-        { id: 'UT-982410', customer: 'Azizbek Rakhimov', serviceName: 'ChatGPT Plus', finalPrice: 260000, status: 'confirmed', createdAt: '2024-03-15' },
-        { id: 'UT-982388', customer: 'Olimjon', serviceName: 'Midjourney v6', finalPrice: 145000, status: 'confirmed', createdAt: '2024-03-10' },
-        { id: 'UT-982301', customer: 'Nodir', serviceName: 'GitHub Copilot', finalPrice: 125000, status: 'pending', createdAt: '2024-03-08' },
-    ],
-    users: [
-        { id: 1, tgId: '123456789', fullName: 'Azizbek Rakhimov', username: 'azizbek', balance: 4250000, joined: '2024-01-10' },
-        { id: 2, tgId: '987654321', fullName: 'Sardor', username: 'sardorv', balance: 0, joined: '2024-02-15' }
-    ],
-    promos: [
-        { id: 1, code: 'USTAI10', discount: 10, target: 'all', status: 'active', uses: 45 },
-        { id: 2, code: 'NEWYEAR', discount: 20, target: 'all', status: 'inactive', uses: 120 }
-    ],
-    activeHeroPromo: {
-        productId: 1,
-        discount: 30,
-        text: "Faqat bugun -30% chegirma bilan obuna bo'ling!",
-        cta: 'Hozir olish',
-    }
-};
-
-export function getDB() {
+// Fallback logic for Orders and Users (mocked)
+const DB_KEY = 'ustaitech_admin_db_temp';
+function getTempDB() {
     const data = localStorage.getItem(DB_KEY);
-    if (!data) {
-        localStorage.setItem(DB_KEY, JSON.stringify(defaultData));
-        return defaultData;
-    }
+    if (!data) return { orders: [], users: [] };
     return JSON.parse(data);
 }
 
-export function saveDB(data) {
-    localStorage.setItem(DB_KEY, JSON.stringify(data));
+// ─── PRODUCTS (SERVICES) ────────────────────────────────────────────────────────
+export async function getProducts() {
+    try {
+        const res = await fetch(\`\${API_BASE}/catalog/services?limit=100\`);
+        const data = await res.json();
+        return (data.items || []).map(p => ({
+            id: p.id,
+            name: p.name,
+            subtitle: p.description_ru || '',
+            price: p.price,
+            category: p.category_id || 'text-ai',
+            badge: p.stars_price > 0 ? 'STARS' : 'HOT',
+            status: p.active ? 'active' : 'inactive',
+            icon: p.image_file_id || 'star'
+        }));
+    } catch { return []; }
 }
 
-export function getProducts() { return getDB().products; }
-export function getOrders() { return getDB().orders; }
-export function getUsers() { return getDB().users; }
-export function getPromos() { return getDB().promos; }
-export function getActivePromo() { return getDB().activeHeroPromo; }
-
-// Mutators
-export function saveProduct(product) {
-    const db = getDB();
+export async function saveProduct(product) {
+    const payload = {
+        name: product.name,
+        description: "Admin panel description",
+        price: parseInt(product.price) || 0,
+        category_id: parseInt(product.category) || null,
+        image_file_id: product.icon || 'star',
+        description_ru: product.subtitle || '',
+        stars_price: product.badge === 'STARS' ? 100 : 0,
+        supports_stars: product.badge === 'STARS' ? 1 : 0
+    };
+    
     if (product.id) {
-        db.products = db.products.map(p => p.id === product.id ? product : p);
+        await fetch(\`\${API_BASE}/admin/services/\${product.id}\`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
     } else {
-        const nextId = Math.max(0, ...db.products.map(p => p.id)) + 1;
-        db.products.push({ ...product, id: nextId });
+        await fetch(\`\${API_BASE}/admin/services\`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
     }
-    saveDB(db);
 }
 
-export function deleteProduct(id) {
-    const db = getDB();
-    db.products = db.products.filter(p => p.id !== id);
-    saveDB(db);
+export async function deleteProduct(id) {
+    await fetch(\`\${API_BASE}/admin/services/\${id}\`, { method: 'DELETE' });
 }
 
-export function savePromo(promo) {
-    const db = getDB();
+// ─── PROMOS & BULK DISCOUNTS ──────────────────────────────────────────────────
+export async function getPromos() {
+    try {
+        const res = await fetch(\`\${API_BASE}/admin/coupons\`);
+        const data = await res.json();
+        return (data || []).map(c => ({
+            id: c.id,
+            code: c.code,
+            discount: c.discount_percent,
+            target: c.service_id ? c.service_id.toString() : 'all',
+            status: c.is_active ? 'active' : 'inactive',
+            uses: c.used_count || 0,
+            max_uses: c.max_uses
+        }));
+    } catch { return []; }
+}
+
+export async function savePromo(promo) {
+    const payload = {
+        code: promo.code,
+        discount_percent: parseInt(promo.discount) || 0,
+        max_uses: parseInt(promo.uses) || 100,
+        max_per_user: 1,
+        service_id: promo.target === 'all' ? null : parseInt(promo.target)
+    };
     if (promo.id) {
-        db.promos = db.promos.map(p => p.id === promo.id ? promo : p);
+        await fetch(\`\${API_BASE}/admin/coupons/\${promo.id}\`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
     } else {
-        const nextId = Math.max(0, ...db.promos.map(p => p.id)) + 1;
-        db.promos.push({ ...promo, id: nextId, uses: 0 });
+        await fetch(\`\${API_BASE}/admin/coupons\`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
     }
-    saveDB(db);
 }
 
-export function deletePromo(id) {
-    const db = getDB();
-    db.promos = db.promos.filter(p => p.id !== id);
-    saveDB(db);
+export async function deletePromo(id) {
+    await fetch(\`\${API_BASE}/admin/coupons/\${id}\`, { method: 'DELETE' });
 }
 
-export function updateHeroPromo(promo) {
-    const db = getDB();
-    db.activeHeroPromo = promo;
-    saveDB(db);
+// ─── HERO PROMO (BANNER) ──────────────────────────────────────────────────────
+export async function getActivePromo() {
+    try {
+        const res = await fetch(\`\${API_BASE}/admin/promos\`);
+        const data = await res.json();
+        if (data && data.length > 0) {
+            const h = data[0];
+            return {
+                id: h.id, // we'll use this ID to update
+                productId: h.service_id || 1, // backend might not have service_id linked strictly if url is used
+                discount: 0,
+                text: h.text,
+                cta: "Batafsil"
+            };
+        }
+        return { productId: 1, discount: 0, text: "Aksiyani sozlang", cta: "Sotib olish" };
+    } catch { return null; }
 }
 
-// Utils
+export async function updateHeroPromo(promo) {
+    const existing = await fetch(\`\${API_BASE}/admin/promos\`).then(r => r.json());
+    
+    // We assume the first promo is the hero
+    const payload = {
+        title: "Maxsus Aksiya",
+        text: promo.text,
+        image_file_id: "banner_1", // dummy
+        url: null
+    };
+
+    if (existing && existing.length > 0) {
+        await fetch(\`\${API_BASE}/admin/promos/\${existing[0].id}\`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+    } else {
+        await fetch(\`\${API_BASE}/admin/promos\`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+    }
+}
+
+// ─── MOCKED DATA ──────────────────────────────────────────────────────────────
+export async function getOrders() { return getTempDB().orders; }
+export async function getUsers() { return getTempDB().users; }
+
 export function formatPrice(price) {
     return new Intl.NumberFormat('uz-UZ').format(price) + " so'm";
 }

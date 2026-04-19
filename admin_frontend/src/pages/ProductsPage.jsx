@@ -7,8 +7,8 @@ export default function ProductsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
 
-    const refreshData = () => {
-        setProducts(getProducts());
+    const refreshData = async () => {
+        setProducts(await getProducts());
     };
 
     useEffect(() => {
@@ -25,15 +25,15 @@ export default function ProductsPage() {
         setIsModalOpen(true);
     };
 
-    const handleDelete = (id) => {
+    const handleDelete = async (id) => {
         if (confirm("Haqiqatan ham bu mahsulotni o'chirmoqchimisiz?")) {
-            deleteProduct(id);
+            await deleteProduct(id);
             refreshData();
         }
     };
 
-    const handleSave = (product) => {
-        saveProduct(product);
+    const handleSave = async (product) => {
+        await saveProduct(product);
         setIsModalOpen(false);
         refreshData();
     };

@@ -13,10 +13,10 @@ export default function PromoPage() {
 
     const [isHeroModalOpen, setIsHeroModalOpen] = useState(false);
 
-    const refreshData = () => {
-        setPromos(getPromos());
+    const refreshData = async () => {
+        setPromos(await getPromos());
         setHeroPromo(getActivePromo());
-        setProducts(getProducts());
+        setProducts(await getProducts());
     };
 
     useEffect(() => {
@@ -36,13 +36,13 @@ export default function PromoPage() {
 
     const handleDeletePromo = (id) => {
         if (confirm("Haqiqatan ham bu promokodni o'chirmoqchimisiz?")) {
-            deletePromo(id);
+            await deletePromo(id);
             refreshData();
         }
     };
 
     const handleSavePromo = (promo) => {
-        savePromo(promo);
+        await savePromo(promo);
         setIsPromoModalOpen(false);
         refreshData();
     };
@@ -52,8 +52,8 @@ export default function PromoPage() {
         setIsHeroModalOpen(true);
     };
 
-    const handleSaveHero = (promo) => {
-        updateHeroPromo(promo);
+    const handleSaveHero = async (promo) => {
+        await updateHeroPromo(promo);
         setIsHeroModalOpen(false);
         refreshData();
     };

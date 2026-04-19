@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef } from 'react'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
-import { getProductById } from '../data/mock-products'
+import { useCatalog } from '../contexts/CatalogContext'
 import './SuccessPage.css'
 
 // API base URL — production da o'zgartiladi
@@ -10,6 +10,7 @@ export default function SuccessPage() {
   const { id } = useParams()
   const navigate = useNavigate()
   const location = useLocation()
+  const { getProductById } = useCatalog()
   const product = getProductById(id)
   const paymentMethod = location.state?.paymentMethod || 'uzcard'
   const isStars = paymentMethod === 'stars'

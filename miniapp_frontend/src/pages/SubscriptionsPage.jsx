@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { mockOrders, formatPrice, products } from '../data/mock-products'
+import { useCatalog } from '../contexts/CatalogContext'
 import './SubscriptionsPage.css'
 
 const statusMap = {
@@ -9,27 +9,33 @@ const statusMap = {
     cancelled: { label: 'Bekor qilingan', icon: 'cancel', color: 'var(--color-outline)', bg: 'rgba(133, 147, 152, 0.1)' },
 }
 
-// Simulate active subscriptions from orders
-const activeSubscriptions = mockOrders.map(order => {
-    const product = products.find(p => p.name === order.serviceName)
-    const daysLeft = order.status === 'confirmed' ? Math.floor(Math.random() * 25) + 5 : 0
-    return {
-        ...order,
-        icon: product?.icon || 'smart_toy',
-        daysLeft,
-        expireDate: order.status === 'confirmed'
-            ? new Date(Date.now() + daysLeft * 86400000).toLocaleDateString('uz-UZ')
-            : null,
-    }
-})
-
-// Recommended products (not yet subscribed)
-const recommended = products.filter(p =>
-    !mockOrders.some(o => o.serviceName === p.name)
-).slice(0, 3)
-
 export default function SubscriptionsPage() {
     const navigate = useNavigate()
+    const { orders, products, formatPrice } = useCatalog()
+
+    // Calculate active subscriptions from real backend orders array
+    const activeSubscriptions = orders.map(order => {
+        const serviceName = order.service_name || order.serviceName
+        const finalPrice = order.final_price || order.finalPrice
+        const product = products.find(p => p.id === order.service_id || p.name === serviceName)
+        const daysLeft = order.status === 'confirmed' ? Math.floor(Math.random() * 25) + 5 : 0
+
+        return {
+            ...order,
+            serviceName,
+            finalPrice,
+            icon: product?.icon || 'smart_toy',
+            daysLeft,
+            expireDate: order.status === 'confirmed'
+                ? new Date(Date.now() + daysLeft * 86400000).toLocaleDateString('uz-UZ')
+                : null,
+        }
+    })
+
+    // Recommended products (not yet subscribed)
+    const recommended = products.filter(p =>
+        !orders.some(o => (o.service_name || o.serviceName) === p.name)
+    ).slice(0, 3)
 
     return (
         <div className="subs-page page-enter">
@@ -52,7 +58,7 @@ export default function SubscriptionsPage() {
                 </div>
                 <div className="subs-stats__divider"></div>
                 <div className="subs-stats__item">
-                    <span className="subs-stats__value">{formatPrice(mockOrders.reduce((sum, o) => sum + o.finalPrice, 0))}</span>
+                    <span className="subs-stats__value">{formatPrice(orders.reduce((sum, o) => sum + (o.final_price || o.finalPrice || 0), 0))}</span>
                     <span className="subs-stats__label">Umumiy</span>
                 </div>
             </section>

@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import StickyFooterCTA from '../components/ui/StickyFooterCTA'
-import { getProductById, formatPrice, paymentMethods } from '../data/mock-products'
+import { useCatalog } from '../contexts/CatalogContext'
 import './CheckoutPage.css'
 
 export default function CheckoutPage() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { getProductById, formatPrice, paymentMethods } = useCatalog()
   const product = getProductById(id)
   const [selectedPayment, setSelectedPayment] = useState('uzcard')
   const [promoCode, setPromoCode] = useState('')

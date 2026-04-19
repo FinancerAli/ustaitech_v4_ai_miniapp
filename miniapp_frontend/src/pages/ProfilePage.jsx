@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useTelegram } from '../hooks/useTelegram'
-import { mockProfile, formatPrice } from '../data/mock-products'
+import { useCatalog } from '../contexts/CatalogContext'
 import './ProfilePage.css'
 
 const menuItems = [
@@ -13,7 +13,7 @@ const menuItems = [
 export default function ProfilePage() {
   const navigate = useNavigate()
   const { user } = useTelegram()
-  const profile = mockProfile
+  const { profile, formatPrice } = useCatalog()
 
   // Use Telegram user name if available
   const displayName = user

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import ProductCard from '../components/ui/ProductCard'
 import TrustStrip from '../components/ui/TrustStrip'
 import heroBanner from '../assets/hero-banner.png'
-import { products, activePromo, getProductById } from '../data/mock-products'
+import { useCatalog } from '../contexts/CatalogContext'
 import './HomePage.css'
 
 const steps = [
@@ -36,6 +36,7 @@ const testimonials = [
 export default function HomePage() {
   const navigate = useNavigate()
   const reviewsRef = useRef(null)
+  const { products, activePromo, getProductById } = useCatalog()
 
   const promoProduct = activePromo ? getProductById(activePromo.productId) : null
 

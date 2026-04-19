@@ -1,11 +1,12 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import StickyFooterCTA from '../components/ui/StickyFooterCTA'
-import { getProductById, formatPrice } from '../data/mock-products'
+import { useCatalog } from '../contexts/CatalogContext'
 import './ProductDetailPage.css'
 
 export default function ProductDetailPage() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { getProductById, formatPrice } = useCatalog()
   const product = getProductById(id)
 
   if (!product) {

@@ -1,13 +1,14 @@
 import { useEffect } from 'react'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import LoadingSpinner from '../components/feedback/LoadingSpinner'
-import { getProductById } from '../data/mock-products'
+import { useCatalog } from '../contexts/CatalogContext'
 import './ProcessingPage.css'
 
 export default function ProcessingPage() {
   const { id } = useParams()
   const navigate = useNavigate()
   const location = useLocation()
+  const { getProductById } = useCatalog()
   const product = getProductById(id)
   const paymentMethod = location.state?.paymentMethod || 'uzcard'
 

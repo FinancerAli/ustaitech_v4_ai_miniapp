@@ -148,9 +148,35 @@ export async function updateHeroPromo(promo) {
     }
 }
 
-// ─── MOCKED DATA ──────────────────────────────────────────────────────────────
-export async function getOrders() { return getTempDB().orders; }
-export async function getUsers() { return getTempDB().users; }
+// ─── API DATA FOR DASHBOARD ───────────────────────────────────────────────────
+export async function getOrders() {
+    try {
+        const res = await fetch(`${API_BASE}/admin/orders?limit=1000`);
+        const data = await res.json();
+        return (data || []).map(o => ({
+            id: o.id,
+            user_id: o.user_id,
+            service: o.service_name || `Xizmat #${o.service_id}`,
+            amount: o.final_price,
+            status: o.status,
+            date: o.created_at ? o.created_at.split(' ')[0] : new Date().toISOString().split('T')[0]
+        }));
+    } catch { return []; }
+}
+
+export async function getUsers() {
+    try {
+        const res = await fetch(`${API_BASE}/admin/users`);
+        const data = await res.json();
+        return (data || []).map(u => ({
+            id: u.telegram_id || u.id,
+            name: `${u.first_name || ''} ${u.last_name || ''}`.trim() || u.username || 'Foydalanuvchi',
+            phone: u.phone || "Kiritilmagan",
+            status: 'active',
+            date: u.created_at ? u.created_at.split(' ')[0] : new Date().toISOString().split('T')[0]
+        }));
+    } catch { return []; }
+}
 
 export function formatPrice(price) {
     return new Intl.NumberFormat('uz-UZ').format(price) + " so'm";

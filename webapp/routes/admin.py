@@ -87,3 +87,13 @@ async def delete_coupon_api(coupon_id: int):
 @router.get("/coupons")
 async def list_coupons():
     return await database.get_all_coupons()
+
+
+# --- Admin Dashboard Metrics ---
+@router.get("/users")
+async def list_users():
+    return await database.get_all_users()
+
+@router.get("/orders")
+async def list_orders(limit: int = 1000):
+    return await database.get_all_orders(limit=limit)

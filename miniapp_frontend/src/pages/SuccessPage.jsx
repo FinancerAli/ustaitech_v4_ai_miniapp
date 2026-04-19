@@ -1,17 +1,15 @@
 import { useState, useMemo, useRef } from 'react'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
-import { useCatalog } from '../contexts/CatalogContext'
+import { getApiBaseUrl } from '../lib/api'
 import './SuccessPage.css'
 
 // API base URL — production da o'zgartiladi
-const API_BASE = import.meta.env.VITE_API_BASE || ''
+const API_BASE = getApiBaseUrl()
 
 export default function SuccessPage() {
   const { id } = useParams()
   const navigate = useNavigate()
   const location = useLocation()
-  const { getProductById } = useCatalog()
-  const product = getProductById(id)
   const paymentMethod = location.state?.paymentMethod || 'uzcard'
   const isStars = paymentMethod === 'stars'
   const fileInputRef = useRef(null)
@@ -21,6 +19,9 @@ export default function SuccessPage() {
   const [previewUrl, setPreviewUrl] = useState(null)
   const [selectedFile, setSelectedFile] = useState(null)
   const [errorMsg, setErrorMsg] = useState('')
+  const isLocalDev =
+    typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
 
   const orderId = useMemo(() => 'UT-' + String(Date.now()).slice(-6), [])
 
@@ -56,16 +57,21 @@ export default function SuccessPage() {
     setErrorMsg('')
 
     try {
+      const serviceId = Number(id)
+      if (!Number.isFinite(serviceId)) {
+        throw new Error("Noto'g'ri mahsulot ID")
+      }
+
       // Get Telegram initData for auth
       const initData = window.Telegram?.WebApp?.initData || ''
 
       // Step 1: Create order
       const orderForm = new FormData()
-      orderForm.append('service_id', id)
+      orderForm.append('service_id', String(serviceId))
       orderForm.append('payment_method', 'manual')
       orderForm.append('note', '')
 
-      const orderRes = await fetch(`${API_BASE}/api/orders/create`, {
+      const orderRes = await fetch(`${API_BASE}/orders/create`, {
         method: 'POST',
         headers: { 'X-Telegram-Init-Data': initData },
         body: orderForm,
@@ -82,7 +88,7 @@ export default function SuccessPage() {
       const receiptForm = new FormData()
       receiptForm.append('receipt', selectedFile)
 
-      const receiptRes = await fetch(`${API_BASE}/api/orders/${realOrderId}/receipt`, {
+      const receiptRes = await fetch(`${API_BASE}/orders/${realOrderId}/receipt`, {
         method: 'POST',
         headers: { 'X-Telegram-Init-Data': initData },
         body: receiptForm,
@@ -96,7 +102,7 @@ export default function SuccessPage() {
     } catch (err) {
       console.error('Receipt upload error:', err)
       // If no backend available, simulate success (dev mode)
-      if (!API_BASE) {
+      if (isLocalDev) {
         setTimeout(() => setUploadState('sent'), 1500)
       } else {
         setUploadState('preview')

@@ -10,6 +10,8 @@
   width: 64px;
   height: 64px;
   flex-shrink: 0;
+  overflow: hidden;
+  position: relative;
   border-radius: var(--radius-md);
   background: linear-gradient(135deg, rgba(0, 212, 255, 0.08), rgba(0, 219, 189, 0.04));
   display: flex;
@@ -20,6 +22,11 @@
 
 .product-card__icon-box .material-symbols-outlined {
   color: var(--color-primary);
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+  line-height: 1;
 }
 
 .product-card__icon-box--large {

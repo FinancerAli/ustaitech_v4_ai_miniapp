@@ -52,10 +52,17 @@ export default function ProductDetailPage() {
 
       {/* Product Description */}
       <section className="detail-description" style={{ padding: '0 20px', marginBottom: '24px' }}>
-        <h4 className="detail-features__label" style={{ marginBottom: '8px' }}>Tavsif</h4>
-        <p style={{ color: 'var(--color-on-surface-variant)', fontSize: '14px', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
-          {product.description || product.subtitle || "Premium sifatli xizmat"}
-        </p>
+        <h4 className="detail-features__label" style={{ marginBottom: '12px' }}>Tavsif</h4>
+        <div className="glass-panel" style={{
+          padding: '16px',
+          borderRadius: 'var(--radius-lg)',
+          background: 'linear-gradient(145deg, rgba(168, 232, 255, 0.05), rgba(60, 73, 78, 0.1))',
+          border: '1px solid rgba(168, 232, 255, 0.1)'
+        }}>
+          <p style={{ color: 'var(--color-on-surface-variant)', fontSize: '14px', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
+            {product.description || product.subtitle || "Premium sifatli xizmat"}
+          </p>
+        </div>
       </section>
 
       {/* Features List */}

@@ -27,22 +27,47 @@ export function CatalogProvider({ children }) {
           fetchProfileOrders().catch(() => ({ items: [] }))
         ]);
 
+        // Generate context-aware features based on product name
+        const generateFeatures = (name) => {
+          const lower = name.toLowerCase();
+          if (lower.includes('gpt') || lower.includes('chatgpt')) {
+            return [
+              { icon: 'smart_toy', title: 'GPT-4 kuchi', desc: 'Eng aqlli AI modeli', color: 'primary' },
+              { icon: 'speed', title: 'Cheklovsiz', desc: 'Tez va uzluksiz ishlash', color: 'secondary' }
+            ];
+          }
+          if (lower.includes('canva') || lower.includes('pro')) {
+            return [
+              { icon: 'palette', title: 'Premium shablonlar', desc: 'Barcha dizaynlar ochiq', color: 'tertiary' },
+              { icon: 'magic_button', title: 'AI vositalar', desc: 'Barcha moslamalar', color: 'primary' }
+            ];
+          }
+          if (lower.includes('midjourney') || lower.includes('tasvir')) {
+            return [
+              { icon: 'image', title: 'Yuqori Sifat', desc: 'Photorealistic rasmlar', color: 'secondary' },
+              { icon: 'fast_forward', title: 'Fast soatlari', desc: 'Tezkor generatsiya', color: 'primary' }
+            ];
+          }
+          return [
+            { icon: 'verified', title: 'Kafolatlangan', desc: '100% ishonchli xizmat', color: 'primary' },
+            { icon: 'support_agent', title: "Qo'llab-quvvatlash", desc: "Tezkor yordam", color: 'secondary' }
+          ];
+        };
+
         // Map backend products to frontend format
         const loadedProducts = (servicesRes.items || []).map(p => ({
           id: p.id,
           name: p.name,
-          subtitle: p.description_ru || '', // use ru desc as subtitle if any, or leave empty
-          description: p.description || '',
+          subtitle: p.description || 'Premium obuna', // Removed Russian description
+          description: p.description || 'Ushbu xizmat orqali siz eng yaxshi imkoniyatlarga ega bo\'lasiz.',
           price: p.price,
           icon: p.image_file_id || 'star', // fallback icon
           badge: p.stars_price > 0 ? 'STARS' : 'HOT',
           badgeType: p.stars_price > 0 ? 'primary' : 'tertiary',
           category: p.category_id,
-          features: [
-            { icon: 'check', title: 'Feature', desc: 'Premium xizmat', color: 'primary' }
-          ],
+          features: generateFeatures(p.name),
           details: [
-            p.delivery_content || "Tezkor yetkazib berish"
+            p.delivery_content || "Tezkor yetkazib berish (5-10 daqiqa)"
           ],
           isActive: p.active === 1
         }));

@@ -4,69 +4,69 @@ import { fetchCatalogServices, fetchActivePromotions, fetchProfileSummary, fetch
 const CatalogContext = createContext();
 
 export function CatalogProvider({ children }) {
-    const [products, setProducts] = useState([]);
-    const [categories, setCategories] = useState([{ id: 'all', label: 'Barchasi' }]);
-    const [activePromo, setActivePromo] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [profile, setProfile] = useState({
-        fullName: 'Aziz',
-        username: '',
-        bonusBalance: 0,
-        confirmedOrdersCount: 0,
-        isPremium: false
-    });
-    const [orders, setOrders] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([{ id: 'all', label: 'Barchasi' }]);
+  const [activePromo, setActivePromo] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [profile, setProfile] = useState({
+    fullName: 'Aziz',
+    username: '',
+    bonusBalance: 0,
+    confirmedOrdersCount: 0,
+    isPremium: false
+  });
+  const [orders, setOrders] = useState([]);
 
-    useEffect(() => {
-        async function loadData() {
-            try {
-                const [servicesRes, promoRes, profileRes, ordersRes] = await Promise.all([
-                    fetchCatalogServices().catch(() => ({ items: [] })),
-                    fetchActivePromotions().catch(() => ({ items: [] })),
-                    fetchProfileSummary().catch(() => null),
-                    fetchProfileOrders().catch(() => ({ items: [] }))
-                ]);
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [servicesRes, promoRes, profileRes, ordersRes] = await Promise.all([
+          fetchCatalogServices().catch(() => ({ items: [] })),
+          fetchActivePromotions().catch(() => ({ items: [] })),
+          fetchProfileSummary().catch(() => null),
+          fetchProfileOrders().catch(() => ({ items: [] }))
+        ]);
 
-                // Map backend products to frontend format
-                const loadedProducts = (servicesRes.items || []).map(p => ({
-                    id: p.id,
-                    name: p.name,
-                    subtitle: p.description_ru || '', // use ru desc as subtitle if any, or leave empty
-                    description: p.description || '',
-                    price: p.price,
-                    icon: p.image_file_id || 'star', // fallback icon
-                    badge: p.stars_price > 0 ? 'STARS' : 'HOT',
-                    badgeType: p.stars_price > 0 ? 'primary' : 'tertiary',
-                    category: p.category_id,
-                    features: [
-                        { icon: 'check', title: 'Feature', desc: 'Premium xizmat', color: 'primary' }
-                    ],
-                    details: [
-                        p.delivery_content || "Tezkor yetkazib berish"
-                    ],
-                    isActive: p.active === 1
-                }));
-                setProducts(loadedProducts);
+        // Map backend products to frontend format
+        const loadedProducts = (servicesRes.items || []).map(p => ({
+          id: p.id,
+          name: p.name,
+          subtitle: p.description_ru || '', // use ru desc as subtitle if any, or leave empty
+          description: p.description || '',
+          price: p.price,
+          icon: p.image_file_id || 'star', // fallback icon
+          badge: p.stars_price > 0 ? 'STARS' : 'HOT',
+          badgeType: p.stars_price > 0 ? 'primary' : 'tertiary',
+          category: p.category_id,
+          features: [
+            { icon: 'check', title: 'Feature', desc: 'Premium xizmat', color: 'primary' }
+          ],
+          details: [
+            p.delivery_content || "Tezkor yetkazib berish"
+          ],
+          isActive: p.active === 1
+        }));
+        setProducts(loadedProducts);
 
-                if (promoRes.items && promoRes.items.length > 0) {
-                    const promo = promoRes.items[0];
-                    setActivePromo({
-                        productId: promo.service_id || (loadedProducts.length > 0 ? loadedProducts[0].id : null),
-                        discount: 0,
-                        text: promo.text || promo.title,
-                        cta: 'Batafsil'
-                    });
-                }
+        if (promoRes.items && promoRes.items.length > 0) {
+          const promo = promoRes.items[0];
+          setActivePromo({
+            productId: promo.service_id || (loadedProducts.length > 0 ? loadedProducts[0].id : null),
+            discount: 0,
+            text: promo.text || promo.title,
+            cta: 'Batafsil'
+          });
+        }
 
-                if (profileRes) {
-                    setProfile(profileRes);
-                }
+        if (profileRes) {
+          setProfile(profileRes);
+        }
 
-                setOrders(ordersRes.items || []);
+        setOrders(ordersRes.items || []);
 
-                // Build dynamic categories based on loaded products
-                const uniqueCatIds = [...new Set(loadedProducts.map(p => p.category).filter(c => c))];
-                const dynamicCats = uniqueCatIds.map(id => ({ id, label: \`Kategoriya \${id}\` })); // Simplified
+        // Build dynamic categories based on loaded products
+        const uniqueCatIds = [...new Set(loadedProducts.map(p => p.category).filter(c => c))];
+        const dynamicCats = uniqueCatIds.map(id => ({ id, label: `Kategoriya ${id}` })); // Simplified
         const finalCats = [{ id: 'all', label: 'Barchasi' }];
         // Add hardcoded mappings for a better UI if desired, else use dynamic
         finalCats.push({ id: 2, label: 'Matn AI' });

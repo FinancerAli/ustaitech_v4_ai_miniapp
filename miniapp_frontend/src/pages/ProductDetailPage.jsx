@@ -50,6 +50,14 @@ export default function ProductDetailPage() {
         </section>
       )}
 
+      {/* Product Description */}
+      <section className="detail-description" style={{ padding: '0 20px', marginBottom: '24px' }}>
+        <h4 className="detail-features__label" style={{ marginBottom: '8px' }}>Tavsif</h4>
+        <p style={{ color: 'var(--color-on-surface-variant)', fontSize: '14px', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
+          {product.description || product.subtitle || "Premium sifatli xizmat"}
+        </p>
+      </section>
+
       {/* Features List */}
       {product.details && (
         <section className="detail-features">

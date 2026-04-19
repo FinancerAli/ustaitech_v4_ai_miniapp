@@ -14,11 +14,13 @@ export default function ProfilePage() {
   const navigate = useNavigate()
   const { user } = useTelegram()
   const { profile, formatPrice } = useCatalog()
+  const balance = profile?.bonusBalance ?? profile?.bonus_balance ?? 0
+  const isPremium = Boolean(profile?.isPremium ?? profile?.is_premium ?? profile?.is_confirmed_customer)
 
   // Use Telegram user name if available
   const displayName = user
     ? `${user.first_name || ''} ${user.last_name || ''}`.trim()
-    : profile.fullName
+    : (profile?.fullName || profile?.full_name || 'Foydalanuvchi')
 
   return (
     <div className="profile-page page-enter">
@@ -35,7 +37,7 @@ export default function ProfilePage() {
         </div>
         <div className="profile-header__info">
           <h1 className="profile-header__name">{displayName}</h1>
-          {profile.isPremium && (
+          {isPremium && (
             <div className="profile-header__tier">
               <span>Premium Client</span>
             </div>
@@ -49,7 +51,7 @@ export default function ProfilePage() {
         <div className="profile-wallet__inner glass-panel">
           <span className="profile-wallet__label">Mavjud balans</span>
           <div className="profile-wallet__balance">
-            <span className="profile-wallet__amount">{formatPrice(profile.bonusBalance)}</span>
+            <span className="profile-wallet__amount">{formatPrice(balance)}</span>
             <span className="profile-wallet__currency">UZS</span>
           </div>
           <div className="profile-wallet__divider"></div>

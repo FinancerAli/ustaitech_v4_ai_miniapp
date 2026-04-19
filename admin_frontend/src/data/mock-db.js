@@ -1,6 +1,6 @@
 // API-based mock-db for Admin Panel
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL?.replace(/\// + $ /, '') || '/api';
+const API_BASE = import.meta.env.VITE_API_BASE_URL?.replace(/\/+$/, '') || '/api';
 
 // Fallback logic for Orders and Users (mocked)
 const DB_KEY = 'ustaitech_admin_db_temp';
@@ -13,7 +13,7 @@ function getTempDB() {
 // ─── PRODUCTS (SERVICES) ────────────────────────────────────────────────────────
 export async function getProducts() {
     try {
-        const res = await fetch(\`\${API_BASE}/catalog/services?limit=100\`);
+        const res = await fetch(`${API_BASE}/catalog/services?limit=100`);
         const data = await res.json();
         return (data.items || []).map(p => ({
             id: p.id,
@@ -39,15 +39,15 @@ export async function saveProduct(product) {
         stars_price: product.badge === 'STARS' ? 100 : 0,
         supports_stars: product.badge === 'STARS' ? 1 : 0
     };
-    
+
     if (product.id) {
-        await fetch(\`\${API_BASE}/admin/services/\${product.id}\`, {
+        await fetch(`${API_BASE}/admin/services/${product.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
     } else {
-        await fetch(\`\${API_BASE}/admin/services\`, {
+        await fetch(`${API_BASE}/admin/services`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -56,13 +56,13 @@ export async function saveProduct(product) {
 }
 
 export async function deleteProduct(id) {
-    await fetch(\`\${API_BASE}/admin/services/\${id}\`, { method: 'DELETE' });
+    await fetch(`${API_BASE}/admin/services/${id}`, { method: 'DELETE' });
 }
 
 // ─── PROMOS & BULK DISCOUNTS ──────────────────────────────────────────────────
 export async function getPromos() {
     try {
-        const res = await fetch(\`\${API_BASE}/admin/coupons\`);
+        const res = await fetch(`${API_BASE}/admin/coupons`);
         const data = await res.json();
         return (data || []).map(c => ({
             id: c.id,
@@ -85,13 +85,13 @@ export async function savePromo(promo) {
         service_id: promo.target === 'all' ? null : parseInt(promo.target)
     };
     if (promo.id) {
-        await fetch(\`\${API_BASE}/admin/coupons/\${promo.id}\`, {
+        await fetch(`${API_BASE}/admin/coupons/${promo.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
     } else {
-        await fetch(\`\${API_BASE}/admin/coupons\`, {
+        await fetch(`${API_BASE}/admin/coupons`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -100,13 +100,13 @@ export async function savePromo(promo) {
 }
 
 export async function deletePromo(id) {
-    await fetch(\`\${API_BASE}/admin/coupons/\${id}\`, { method: 'DELETE' });
+    await fetch(`${API_BASE}/admin/coupons/${id}`, { method: 'DELETE' });
 }
 
 // ─── HERO PROMO (BANNER) ──────────────────────────────────────────────────────
 export async function getActivePromo() {
     try {
-        const res = await fetch(\`\${API_BASE}/admin/promos\`);
+        const res = await fetch(`${API_BASE}/admin/promos`);
         const data = await res.json();
         if (data && data.length > 0) {
             const h = data[0];
@@ -123,8 +123,8 @@ export async function getActivePromo() {
 }
 
 export async function updateHeroPromo(promo) {
-    const existing = await fetch(\`\${API_BASE}/admin/promos\`).then(r => r.json());
-    
+    const existing = await fetch(`${API_BASE}/admin/promos`).then(r => r.json());
+
     // We assume the first promo is the hero
     const payload = {
         title: "Maxsus Aksiya",
@@ -134,13 +134,13 @@ export async function updateHeroPromo(promo) {
     };
 
     if (existing && existing.length > 0) {
-        await fetch(\`\${API_BASE}/admin/promos/\${existing[0].id}\`, {
+        await fetch(`${API_BASE}/admin/promos/${existing[0].id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
     } else {
-        await fetch(\`\${API_BASE}/admin/promos\`, {
+        await fetch(`${API_BASE}/admin/promos`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -155,3 +155,4 @@ export async function getUsers() { return getTempDB().users; }
 export function formatPrice(price) {
     return new Intl.NumberFormat('uz-UZ').format(price) + " so'm";
 }
+

@@ -34,14 +34,14 @@ export default function PromoPage() {
         setIsPromoModalOpen(true);
     };
 
-    const handleDeletePromo = (id) => {
+    const handleDeletePromo = async (id) => {
         if (confirm("Haqiqatan ham bu promokodni o'chirmoqchimisiz?")) {
             await deletePromo(id);
             refreshData();
         }
     };
 
-    const handleSavePromo = (promo) => {
+    const handleSavePromo = async (promo) => {
         await savePromo(promo);
         setIsPromoModalOpen(false);
         refreshData();

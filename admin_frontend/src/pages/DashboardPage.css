@@ -1,0 +1,81 @@
+.dashboard-page {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.stat-card {
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border-radius: var(--radius-xl);
+}
+
+.stat-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-icon span {
+    font-size: 28px;
+}
+
+.stat-icon.users {
+    background: rgba(168, 232, 255, 0.15);
+    color: var(--color-primary);
+}
+
+.stat-icon.orders {
+    background: rgba(208, 188, 255, 0.15);
+    color: var(--color-secondary);
+}
+
+.stat-icon.revenue {
+    background: rgba(0, 219, 189, 0.15);
+    color: var(--color-success);
+}
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: var(--color-on-surface-variant);
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    font-family: var(--font-headline);
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--color-on-surface);
+    line-height: 1;
+}
+
+.recent-orders {
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 24px;
+    border-bottom: 1px solid rgba(60, 73, 78, 0.1);
+    background: var(--bg-surface-container-low);
+}
+
+.card-header h3 {
+    font-size: 18px;
+}

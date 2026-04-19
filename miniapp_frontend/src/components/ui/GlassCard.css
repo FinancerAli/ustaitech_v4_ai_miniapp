@@ -1,0 +1,12 @@
+.glass-card-component {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-radius: var(--radius-xl);
+  padding: 16px;
+  transition: transform var(--transition-smooth);
+}
+
+.glass-card-component--border-left {
+  border-left: 2px solid rgba(0, 212, 255, 0.2);
+}

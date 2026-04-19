@@ -1,0 +1,272 @@
+.subs-page {
+    padding-top: calc(var(--header-height) + 32px);
+    padding-left: var(--page-padding);
+    padding-right: var(--page-padding);
+    padding-bottom: calc(var(--nav-height) + 32px);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ── Header ── */
+.subs-header {
+    margin-bottom: 8px;
+}
+
+.subs-header__label {
+    display: block;
+    font-size: 12px;
+    font-family: var(--font-label);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-primary);
+    margin-bottom: 8px;
+}
+
+.subs-header__title {
+    font-family: var(--font-headline);
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: var(--color-on-surface);
+}
+
+/* ── Stats Bar ── */
+.subs-stats {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 20px;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border-radius: var(--radius-xl);
+    border: 1px solid rgba(60, 73, 78, 0.15);
+}
+
+.subs-stats__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.subs-stats__value {
+    font-family: var(--font-headline);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-on-surface);
+}
+
+.subs-stats__label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-on-surface-variant);
+}
+
+.subs-stats__divider {
+    width: 1px;
+    height: 32px;
+    background: rgba(60, 73, 78, 0.3);
+}
+
+/* ── List ── */
+.subs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.subs-list__title {
+    font-family: var(--font-headline);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-on-surface);
+    margin-bottom: 4px;
+}
+
+/* ── Subscription Card ── */
+.subs-card {
+    padding: 20px;
+    border-radius: var(--radius-xl);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.subs-card__top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.subs-card__icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    background: var(--bg-surface-container-highest);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1px solid rgba(168, 232, 255, 0.1);
+}
+
+.subs-card__info {
+    flex: 1;
+    min-width: 0;
+}
+
+.subs-card__name {
+    font-family: var(--font-headline);
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--color-on-surface);
+    margin-bottom: 2px;
+}
+
+.subs-card__price {
+    font-size: 13px;
+    color: var(--color-on-surface-variant);
+}
+
+.subs-card__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* ── Progress ── */
+.subs-card__progress {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.subs-card__progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.subs-card__progress-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-on-surface);
+}
+
+.subs-card__progress-date {
+    font-size: 12px;
+    color: var(--color-on-surface-variant);
+}
+
+.subs-card__progress-bar {
+    width: 100%;
+    height: 4px;
+    background: var(--bg-surface-container-highest);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+
+.subs-card__progress-fill {
+    height: 100%;
+    background: linear-gradient(to right, var(--color-primary), var(--color-primary-container));
+    border-radius: var(--radius-full);
+    transition: width 0.5s ease;
+}
+
+/* ── Actions ── */
+.subs-card__actions {
+    display: flex;
+    gap: 8px;
+}
+
+.subs-card__btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 16px;
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: background var(--transition-normal), opacity var(--transition-normal);
+}
+
+.subs-card__btn--primary {
+    background: rgba(168, 232, 255, 0.1);
+    color: var(--color-primary);
+    border: 1px solid rgba(168, 232, 255, 0.2);
+}
+
+.subs-card__btn--primary:hover {
+    background: rgba(168, 232, 255, 0.2);
+}
+
+.subs-card__btn--ghost {
+    background: transparent;
+    color: var(--color-on-surface-variant);
+    border: 1px solid rgba(60, 73, 78, 0.2);
+}
+
+.subs-card__btn--ghost:hover {
+    background: rgba(60, 73, 78, 0.2);
+}
+
+/* ── Recommended ── */
+.subs-recommended {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.subs-recommended__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.subs-rec-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px 12px;
+    border-radius: var(--radius-xl);
+    gap: 8px;
+    cursor: pointer;
+}
+
+.subs-rec-card__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    background: var(--bg-surface-container-highest);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4px;
+}
+
+.subs-rec-card__name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-on-surface);
+    line-height: 1.2;
+}
+
+.subs-rec-card__price {
+    font-size: 12px;
+    color: var(--color-primary);
+    font-weight: 600;
+}

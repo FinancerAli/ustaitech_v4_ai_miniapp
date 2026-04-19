@@ -1,0 +1,26 @@
+.trust-strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 4px;
+  gap: 8px;
+}
+
+.trust-strip__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0.7;
+}
+
+.trust-strip__icon {
+  font-size: 16px;
+  color: var(--color-tertiary);
+}
+
+.trust-strip__text {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}

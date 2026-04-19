@@ -1,0 +1,73 @@
+.top-app-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--header-height);
+  z-index: var(--z-nav);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--page-padding);
+  background: rgba(16, 20, 26, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-header);
+}
+
+.top-app-bar__left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.top-app-bar__avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg-surface-container-highest);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(60, 73, 78, 0.3);
+}
+
+.top-app-bar__avatar .material-symbols-outlined {
+  color: var(--color-primary);
+  font-size: 14px;
+}
+
+.top-app-bar__back {
+  background: none;
+  border: none;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-on-surface-variant);
+}
+
+.top-app-bar__back:hover {
+  color: var(--color-on-surface);
+}
+
+.top-app-bar__logo {
+  font-family: var(--font-headline);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.top-app-bar__right {
+  display: flex;
+  align-items: center;
+}
+
+.top-app-bar__action {
+  background: none;
+  border: none;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

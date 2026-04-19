@@ -1,0 +1,103 @@
+.catalog-page {
+  padding-top: calc(var(--header-height) + 32px);
+  padding-left: var(--page-padding);
+  padding-right: var(--page-padding);
+  padding-bottom: calc(var(--nav-height) + 32px);
+}
+
+/* ── Hero ── */
+.catalog-hero {
+  margin-bottom: 32px;
+}
+
+.catalog-hero__label {
+  display: block;
+  font-size: 12px;
+  font-family: var(--font-label);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-primary);
+  margin-bottom: 8px;
+}
+
+.catalog-hero__title {
+  font-family: var(--font-headline);
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--color-on-surface);
+}
+
+/* ── Search & Filters ── */
+.catalog-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.catalog-search {
+  position: relative;
+  max-width: 640px;
+}
+
+.catalog-search__icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-outline);
+  font-size: 20px;
+  pointer-events: none;
+}
+
+.catalog-search__input {
+  width: 100%;
+  background: var(--bg-surface-container-low);
+  border: 1px solid rgba(60, 73, 78, 0.15);
+  border-radius: var(--radius-xl);
+  padding: 16px 16px 16px 48px;
+  color: var(--color-on-surface);
+  font-size: 14px;
+  outline: none;
+  transition: border-color var(--transition-normal);
+}
+
+.catalog-search__input:focus {
+  border-color: rgba(168, 232, 255, 0.3);
+}
+
+.catalog-search__input::placeholder {
+  color: var(--color-outline);
+}
+
+.catalog-filters {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.catalog-filters::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Product List ── */
+.catalog-products {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.catalog-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 0;
+  color: var(--color-on-surface-variant);
+  text-align: center;
+}

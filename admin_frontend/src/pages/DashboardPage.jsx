@@ -11,19 +11,22 @@ export default function DashboardPage() {
     });
 
     useEffect(() => {
-        const orders = getOrders();
-        const users = getUsers();
+        async function loadStats() {
+            const orders = await getOrders();
+            const users = await getUsers();
 
-        const revenue = orders
-            .filter(o => o.status === 'confirmed')
-            .reduce((sum, o) => sum + o.finalPrice, 0);
+            const revenue = (orders || [])
+                .filter(o => o.status === 'confirmed')
+                .reduce((sum, o) => sum + (o.finalPrice || 0), 0);
 
-        setStats({
-            totalUsers: users.length,
-            totalOrders: orders.length,
-            totalRevenue: revenue,
-            recentOrders: orders.slice(0, 5) // Last 5 orders
-        });
+            setStats({
+                totalUsers: (users || []).length,
+                totalOrders: (orders || []).length,
+                totalRevenue: revenue,
+                recentOrders: (orders || []).slice(0, 5)
+            });
+        }
+        loadStats();
     }, []);
 
     return (

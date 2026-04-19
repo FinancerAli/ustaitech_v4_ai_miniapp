@@ -1,10 +1,11 @@
 import { useState, useMemo } from 'react'
 import ProductCard from '../components/ui/ProductCard'
 import FilterChip from '../components/ui/FilterChip'
-import { products, categories, searchProducts, getProductsByCategory } from '../data/mock-products'
+import { useCatalog } from '../contexts/CatalogContext'
 import './CatalogPage.css'
 
 export default function CatalogPage() {
+  const { products, categories, getProductsByCategory, searchProducts } = useCatalog()
   const [activeCategory, setActiveCategory] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -15,7 +16,7 @@ export default function CatalogPage() {
       result = result.filter(p => searched.some(s => s.id === p.id))
     }
     return result
-  }, [activeCategory, searchQuery])
+  }, [activeCategory, searchQuery, products])
 
   return (
     <div className="catalog-page page-enter">
